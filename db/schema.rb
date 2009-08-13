@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081114172307) do
+ActiveRecord::Schema.define(:version => 20090813213104) do
 
   create_table "attachment_versions", :force => true do |t|
     t.integer  "attachment_id"
@@ -134,6 +134,12 @@ ActiveRecord::Schema.define(:version => 20081114172307) do
     t.datetime "delivered_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "feeds", :force => true do |t|
+    t.string   "url"
+    t.text     "contents"
+    t.datetime "expires_at"
   end
 
   create_table "file_block_versions", :force => true do |t|

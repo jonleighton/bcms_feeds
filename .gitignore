@@ -1,3 +1,4 @@
 tmp
 config/database.yml
 log
+db/*.sqlite3
