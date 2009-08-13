@@ -62,4 +62,11 @@ class FeedTest < ActiveSupport::TestCase
       assert_equal Time.now.utc + Feed::TTL_ON_ERROR, @feed.expires_at
     end
   end
+  
+  def test_parsed_contents
+    @feed.stubs(:contents).returns(@contents)
+    SimpleRSS.stubs(:parse).with(@contents).returns(parsed_contents = stub)
+    
+    assert_equal parsed_contents, @feed.parsed_contents
+  end
 end

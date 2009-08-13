@@ -8,6 +8,10 @@ class Feed < ActiveRecord::Base
   
   delegate :entries, :items, :to => :parsed_contents
   
+  def parsed_contents
+    @parsed_contents ||= SimpleRSS.parse(contents)
+  end
+  
   def contents
     if expires_at.nil? || expires_at < Time.now.utc
       begin
