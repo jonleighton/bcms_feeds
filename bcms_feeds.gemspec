@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{bcms_feeds}
-  s.version = "1.0.0"
+  s.version = "1.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jon Leighton"]
@@ -27,8 +27,12 @@ Gem::Specification.new do |s|
      "app/models/feed.rb",
      "app/models/feed.rb",
      "app/portlets/feed_portlet.rb",
+     "app/portlets/feed_portlet.rb",
+     "app/views/portlets/feed/_form.html.erb",
      "app/views/portlets/feed/_form.html.erb",
      "app/views/portlets/feed/render.html.erb",
+     "app/views/portlets/feed/render.html.erb",
+     "bcms_feeds.gemspec",
      "config/boot.rb",
      "config/database.example.yml",
      "config/environment.rb",
@@ -47,6 +51,7 @@ Gem::Specification.new do |s|
      "db/migrate/20090813213104_add_feeds.rb",
      "db/schema.rb",
      "doc/README_FOR_APP",
+     "lib/bcms_feeds.rb",
      "lib/bcms_feeds.rb",
      "public/404.html",
      "public/422.html",
@@ -626,6 +631,7 @@ Gem::Specification.new do |s|
      "public/stylesheets/cms/taglist.css",
      "public/stylesheets/cms/thickbox.css",
      "rails/init.rb",
+     "rails/init.rb",
      "script/about",
      "script/console",
      "script/dbconsole",
@@ -638,7 +644,8 @@ Gem::Specification.new do |s|
      "script/server",
      "test/performance/browsing_test.rb",
      "test/test_helper.rb",
-     "test/unit/feed_test.rb"
+     "test/unit/feed_test.rb",
+     "test/unit/portlets/feed_portlet_test.rb"
   ]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/jonleighton/bcms_feeds}
