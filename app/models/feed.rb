@@ -1,5 +1,6 @@
 require "open-uri"
 require "timeout"
+require "simple-rss"
 
 class Feed < ActiveRecord::Base
   TTL = 30.minutes
