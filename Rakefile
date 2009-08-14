@@ -18,7 +18,7 @@ begin
     gemspec.email = "j@jonathanleighton.com"
     gemspec.homepage = "http://github.com/jonleighton/bcms_feeds"
     gemspec.authors = ["Jon Leighton"]
-    gemspec.files += Dir["app/**/*"]
+    gemspec.files = Dir["app/**/*"]
     gemspec.files += Dir["db/migrate/*.rb"]
     gemspec.files -= Dir["db/migrate/*_browsercms_*.rb"]
     gemspec.files -= Dir["db/migrate/*_load_seed_data.rb"]
