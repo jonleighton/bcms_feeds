@@ -17,7 +17,6 @@ begin
     gemspec.description = "A BrowserCMS module which fetches, caches and displays RSS/Atom feeds"
     gemspec.email = "j@jonathanleighton.com"
     gemspec.homepage = "http://github.com/jonleighton/bcms_feeds"
-    gemspec.description = "TODO"
     gemspec.authors = ["Jon Leighton"]
     gemspec.files += Dir["app/**/*"]
     gemspec.files += Dir["db/migrate/*.rb"]
