@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + "/../test_helper"
 
 class FeedTest < ActiveSupport::TestCase
   def setup
-    @feed = Feed.new(:url => "http://example.com/blog.rss")
+    @feed = Feed.create!(:url => "http://example.com/blog.rss")
     @contents = "<feed>Some feed</feed>"
     
     now = Time.now
@@ -29,20 +29,23 @@ class FeedTest < ActiveSupport::TestCase
   
   test "contents with no expiry should return the remote contents and save it" do
     @feed.expires_at = nil
-    @feed.stubs(:remote_contents).returns(@contents)
-    
-    assert_equal @contents, @feed.contents
-    assert_equal @contents, @feed.read_attribute(:contents)
-    assert_equal Time.now.utc + Feed::TTL, @feed.expires_at
+    should_get_remote_contents
   end
   
   test "contents with an expiry in the past return the remote contents and save it" do
     @feed.expires_at = Time.now - 1.hour
+    should_get_remote_contents
+  end
+  
+  def should_get_remote_contents
     @feed.stubs(:remote_contents).returns(@contents)
-    
     assert_equal @contents, @feed.contents
+    @feed.reload
     assert_equal @contents, @feed.read_attribute(:contents)
-    assert_equal Time.now.utc + Feed::TTL, @feed.expires_at
+    
+    # I think the to_i is necessary because of a lack of precision provided by sqlite3. I think.
+    # Anyway, without it the comparison fails.
+    assert_equal (Time.now.utc + Feed::TTL).to_i, @feed.expires_at.to_i
   end
   
   test "contents with the expiry in the future should return the cached contents" do

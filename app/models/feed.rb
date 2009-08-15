@@ -18,15 +18,17 @@ class Feed < ActiveRecord::Base
       begin
         self.expires_at = Time.now.utc + TTL
         write_attribute(:contents, remote_contents)
+        save
       rescue StandardError, Timeout::Error => exception
         logger.error("Loading feed #{url} failed with #{exception.inspect}")
         self.expires_at = Time.now.utc + TTL_ON_ERROR
-        read_attribute(:contents)
+        save
       end
     else
       logger.info("Loading feed from cache: #{url}")
-      read_attribute(:contents)
     end
+    
+    read_attribute(:contents)
   end
   
   def remote_contents
