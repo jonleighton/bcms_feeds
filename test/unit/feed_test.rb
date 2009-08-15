@@ -12,13 +12,13 @@ class FeedTest < ActiveSupport::TestCase
     Feed.send(:remove_const, :TIMEOUT)
     Feed.const_set(:TIMEOUT, 1)
   end
-
-  def test_remote_contents
+  
+  test "remote_contents should fetch the feed" do
     @feed.expects(:open).with("http://example.com/blog.rss").returns(stub(:read => @contents))
     assert_equal @contents, @feed.remote_contents
   end
   
-  def test_remote_contents_timeout
+  test "remote_contents should raise a Timeout::Error if fetching the feed takes longer then Feed::TIMEOUT" do
     def @feed.open(url)
       sleep(2)
       stubs(:read => "bla")
@@ -27,7 +27,7 @@ class FeedTest < ActiveSupport::TestCase
     assert_raise(Timeout::Error) { @feed.remote_contents }
   end
   
-  def test_contents_no_expiry
+  test "contents with no expiry should return the remote contents and save it" do
     @feed.expires_at = nil
     @feed.stubs(:remote_contents).returns(@contents)
     
@@ -36,7 +36,7 @@ class FeedTest < ActiveSupport::TestCase
     assert_equal Time.now.utc + Feed::TTL, @feed.expires_at
   end
   
-  def test_contents_expiry_in_past
+  test "contents with an expiry in the past return the remote contents and save it" do
     @feed.expires_at = Time.now - 1.hour
     @feed.stubs(:remote_contents).returns(@contents)
     
@@ -45,14 +45,14 @@ class FeedTest < ActiveSupport::TestCase
     assert_equal Time.now.utc + Feed::TTL, @feed.expires_at
   end
   
-  def test_contents_expiry_in_future
+  test "contents with the expiry in the future should return the cached contents" do
     @feed.expires_at = Time.now + 1.hour
     @feed.write_attribute(:contents, @contents)
     
     assert_equal @contents, @feed.contents
   end
   
-  def test_contents_expiry_in_past_with_error_getting_remote_contents
+  test "TTL of cached contents should be extended if there is an error fetching the remote contents" do
     [StandardError, Timeout::Error].each do |exception|
       @feed.expires_at = Time.now - 1.hour
       @feed.stubs(:remote_contents).raises(exception)
@@ -63,7 +63,7 @@ class FeedTest < ActiveSupport::TestCase
     end
   end
   
-  def test_parsed_contents
+  test "parsed_contents should return the contents parsed by SimpleRSS" do
     @feed.stubs(:contents).returns(@contents)
     SimpleRSS.stubs(:parse).with(@contents).returns(parsed_contents = stub)
     
