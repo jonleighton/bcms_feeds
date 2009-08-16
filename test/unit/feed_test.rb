@@ -29,16 +29,18 @@ class FeedTest < ActiveSupport::TestCase
   
   test "contents with no expiry should return the remote contents and save it" do
     @feed.expires_at = nil
-    should_get_remote_contents
+    should_get_remote_contents_and_parse
   end
   
   test "contents with an expiry in the past return the remote contents and save it" do
     @feed.expires_at = Time.now - 1.hour
-    should_get_remote_contents
+    should_get_remote_contents_and_parse
   end
   
-  def should_get_remote_contents
+  def should_get_remote_contents_and_parse
     @feed.stubs(:remote_contents).returns(@contents)
+    SimpleRSS.expects(:parse).with(@contents)
+    
     assert_equal @contents, @feed.contents
     @feed.reload
     assert_equal @contents, @feed.read_attribute(:contents)
@@ -55,8 +57,8 @@ class FeedTest < ActiveSupport::TestCase
     assert_equal @contents, @feed.contents
   end
   
-  test "TTL of cached contents should be extended if there is an error fetching the remote contents" do
-    [StandardError, Timeout::Error].each do |exception|
+  test "TTL of cached contents should be extended if there is an error fetching the remote contents, or parsing the feed" do
+    [StandardError, Timeout::Error, SimpleRSSError].each do |exception|
       @feed.expires_at = Time.now - 1.hour
       @feed.stubs(:remote_contents).raises(exception)
       @feed.write_attribute(:contents, @contents)

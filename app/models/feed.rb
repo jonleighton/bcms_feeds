@@ -17,9 +17,11 @@ class Feed < ActiveRecord::Base
     if expires_at.nil? || expires_at < Time.now.utc
       begin
         self.expires_at = Time.now.utc + TTL
-        write_attribute(:contents, remote_contents)
+        new_contents = remote_contents
+        SimpleRSS.parse(new_contents) # Check that we can actually parse it
+        write_attribute(:contents, new_contents)
         save
-      rescue StandardError, Timeout::Error => exception
+      rescue StandardError, Timeout::Error, SimpleRSSError => exception
         logger.error("Loading feed #{url} failed with #{exception.inspect}")
         self.expires_at = Time.now.utc + TTL_ON_ERROR
         save
