@@ -74,4 +74,12 @@ class FeedTest < ActiveSupport::TestCase
     
     assert_equal parsed_contents, @feed.parsed_contents
   end
+  
+  test "Contents can be larger than 64Kb of text in a feed" do
+    feed = Feed.new(:url => 'http://www.foo.com', :contents => '<feed>' + 'w' * 300000 + '</feed>', :expires_at => Time.now + 15.minutes)
+    feed.save
+    
+    assert_equal 'http://www.foo.com', feed.url
+    assert_equal '<feed>' + 'w' * 300000 + '</feed>', feed.contents
+  end
 end
