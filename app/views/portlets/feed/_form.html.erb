@@ -1,4 +1,11 @@
 <%= f.cms_text_field :name %>
 <%= f.cms_text_field :url %>
 <%= f.cms_text_area :code %>
+<%= f.cms_drop_down :limit, 
+  [
+    ['Unlimited','0'],['1','1'],['2','2'],['3','3'],['4','4'],['5','5'],['6','6'],['7','7'],['8','8'],['9','9'],
+    ['10','10'],['11','11'],['12','12'],['13','13'],['14','14'],['15','15'],['16','16'],['17','17'],['18','18'],['19','19'],
+    ['20','20']
+], :instructions => 'Items are available in the @items array and will be limited to the number you select above. You can still access the items via @feed.items, but they will not have a limit applied to them for backwards compatibility.'
+%>
 <%= f.cms_text_area :template, :default_value => Feed::DEFAULT_TEMPLATE %>
