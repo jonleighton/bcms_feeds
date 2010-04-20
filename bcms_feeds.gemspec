@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
      "app/views/portlets/feed/render.html.erb",
      "db/migrate/20090813213104_add_feeds.rb",
      "lib/bcms_feeds.rb",
+     "lib/bcms_feeds/routes.rb",
      "rails/init.rb"
   ]
   s.has_rdoc = true
