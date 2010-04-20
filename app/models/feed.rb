@@ -6,6 +6,19 @@ class Feed < ActiveRecord::Base
   TTL = 30.minutes
   TTL_ON_ERROR = 10.minutes
   TIMEOUT = 10 # In seconds
+
+  DEFAULT_TEMPLATE = '<div class="feed-list feed-number-<%= @portlet.id %>">
+  <h1><%= h @feed.title %></h1>
+  <ul>
+    <% @feed.items.each do |item| %>
+      <li>
+        <div class="title"><%= link_to item.title, item.link %></div>
+        <div class="description"><%= item.description %></div>
+        <div class="item-meta">by <%= h item.dc_creator %> on <%= h item.pubDate %></div>
+      </li>
+    <% end %>
+  </ul>
+</div>'
   
   delegate :entries, :items, :to => :parsed_contents
   
@@ -35,6 +48,6 @@ class Feed < ActiveRecord::Base
   
   def remote_contents
     logger.info("Loading feed from remote: #{url}")
-    Timeout.timeout(TIMEOUT) { open(url).read }
+    Timeout.timeout(TIMEOUT) { open(url,'User-Agent' => 'BrowserCMS bcms_feed extension 1.0.5').read }
   end
 end
