@@ -5,3 +5,4 @@ db/*.sqlite3
 pkg
 db/schema.rb
 *.gem
+*.swp

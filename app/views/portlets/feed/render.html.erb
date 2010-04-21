@@ -1,1 +1,12 @@
-<%=h @portlet.name %>
+<div class="feed-list feed-number-<%= @portlet.id %>">
+  <h1><%= h @feed.title %></h1>
+  <ul>
+    <% @items.each do |item| %>
+      <li>
+        <div class="title"><%= link_to item.title, item.link %></div>
+        <div class="description"><%= item.description %></div>
+        <div class="item-meta">by <%= h item.dc_creator %> on <%= h item.pubDate %></div>
+      </li>
+    <% end %>
+  </ul>
+</div>

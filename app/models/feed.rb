@@ -1,24 +1,11 @@
-require "open-uri"
-require "timeout"
-require "simple-rss"
+require 'net/http'
+require 'timeout'
+require 'simple-rss'
 
 class Feed < ActiveRecord::Base
   TTL = 30.minutes
   TTL_ON_ERROR = 10.minutes
   TIMEOUT = 10 # In seconds
-
-  DEFAULT_TEMPLATE = '<div class="feed-list feed-number-<%= @portlet.id %>">
-  <h1><%= h @feed.title %></h1>
-  <ul>
-    <% @feed.items.each do |item| %>
-      <li>
-        <div class="title"><%= link_to item.title, item.link %></div>
-        <div class="description"><%= item.description %></div>
-        <div class="item-meta">by <%= h item.dc_creator %> on <%= h item.pubDate %></div>
-      </li>
-    <% end %>
-  </ul>
-</div>'
   
   delegate :entries, :items, :to => :parsed_contents
   
@@ -42,12 +29,31 @@ class Feed < ActiveRecord::Base
     else
       logger.info("Loading feed from cache: #{url}")
     end
-    
     read_attribute(:contents)
   end
-  
+
   def remote_contents
-    logger.info("Loading feed from remote: #{url}")
-    Timeout.timeout(TIMEOUT) { open(url,'User-Agent' => 'BrowserCMS bcms_feed extension 1.0.5').read }
+    Timeout.timeout(TIMEOUT) {
+      simple_get(url)
+    }
   end
+
+  private
+
+  def simple_get(url)
+    logger.info("Loading feed from remote: #{url}")
+    parsed_url = URI.parse(url)
+    http = Net::HTTP.start(parsed_url.host, parsed_url.port)
+    response = http.request_get(url, 'User-Agent' => "BrowserCMS bcms_feed extension")
+    if response.is_a?(Net::HTTPSuccess)
+      return response.body
+    elsif response.is_a?(Net::HTTPRedirection)
+      logger.info("#{url} returned a redirect. Following . . ")
+      simple_get(response.header['Location'])
+    else
+      logger.info("#{url} returned a redirect. Following . . ")
+      raise StandardError 
+    end
+  end
+
 end

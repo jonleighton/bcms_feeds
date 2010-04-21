@@ -8,4 +8,4 @@
     ['20','20']
 ], :instructions => 'Items are available in the @items array and will be limited to the number you select above. You can still access the items via @feed.items, but they will not have a limit applied to them for backwards compatibility.'
 %>
-<%= f.cms_text_area :template, :default_value => Feed::DEFAULT_TEMPLATE %>
+<%= f.cms_text_area :template, :default_value => @block.class.default_template %>
