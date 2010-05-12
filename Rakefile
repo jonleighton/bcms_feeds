@@ -19,10 +19,10 @@ begin
     gemspec.homepage = "http://github.com/jonleighton/bcms_feeds"
     gemspec.authors = ["Jon Leighton"]
     gemspec.files = Dir["app/**/*"]
+    gemspec.files += Dir["lib/**/*"]
     gemspec.files += Dir["db/migrate/*.rb"]
     gemspec.files -= Dir["db/migrate/*_browsercms_*.rb"]
     gemspec.files -= Dir["db/migrate/*_load_seed_data.rb"]
-    gemspec.files += Dir["lib/bcms_feeds.rb"]
     gemspec.files += Dir["rails/init.rb"]
     gemspec.add_dependency('simple-rss')
   end

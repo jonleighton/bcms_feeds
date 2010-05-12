@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{bcms_feeds}
-  s.version = "1.0.6"
+  s.version = "1.0.7"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jon Leighton"]
-  s.date = %q{2010-05-03}
+  s.date = %q{2010-05-12}
   s.description = %q{A BrowserCMS module which fetches, caches and displays RSS/Atom feeds}
   s.email = %q{j@jonathanleighton.com}
   s.extra_rdoc_files = [
@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
      "db/migrate/20090813213104_add_feeds.rb",
      "db/migrate/20100115202209_modify_feeds_table_to_use_mediumtext.rb",
      "lib/bcms_feeds.rb",
+     "lib/bcms_feeds/routes.rb",
      "rails/init.rb"
   ]
   s.homepage = %q{http://github.com/jonleighton/bcms_feeds}
