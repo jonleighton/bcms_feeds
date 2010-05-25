@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{bcms_feeds}
-  s.version = "1.0.7"
+  s.version = "1.0.8"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jon Leighton"]
-  s.date = %q{2010-05-12}
+  s.date = %q{2010-05-25}
   s.description = %q{A BrowserCMS module which fetches, caches and displays RSS/Atom feeds}
   s.email = %q{j@jonathanleighton.com}
   s.extra_rdoc_files = [
