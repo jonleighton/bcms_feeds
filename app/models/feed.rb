@@ -44,16 +44,23 @@ class Feed < ActiveRecord::Base
     logger.info("Loading feed from remote: #{url}")
     parsed_url = URI.parse(url)
     http = Net::HTTP.start(parsed_url.host, parsed_url.port)
-    response = http.request_get(url, 'User-Agent' => "BrowserCMS bcms_feed extension")
+    response = http.request_get(url_path(parsed_url), 'User-Agent' => "BrowserCMS bcms_feed extension")
     if response.is_a?(Net::HTTPSuccess)
       return response.body
     elsif response.is_a?(Net::HTTPRedirection)
       logger.info("#{url} returned a redirect. Following . . ")
       simple_get(response.header['Location'])
     else
-      logger.info("#{url} returned a redirect. Following . . ")
+      logger.info("#{url} unexpected results ")
       raise StandardError 
     end
   end
 
+  def url_path(parsed_url)
+    path = parsed_url.path
+    # use the path + query for the request_get() call, not the full url
+    # using the full url can lead to incorrect 'location' headers in the case of a redirect
+    path << "?#{parsed_url.query}" if parsed_url.query
+    path
+  end
 end
