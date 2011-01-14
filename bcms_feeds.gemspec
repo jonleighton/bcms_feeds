@@ -52,3 +52,4 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<simple-rss>, [">= 0"])
   end
 end
+
