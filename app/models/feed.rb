@@ -1,6 +1,6 @@
 require 'net/http'
 require 'timeout'
-require 'simple-rss'
+require 'feedzirra'
 
 class Feed < ActiveRecord::Base
   TTL = 30.minutes
@@ -8,9 +8,9 @@ class Feed < ActiveRecord::Base
   TIMEOUT = 10 # In seconds
   
   delegate :entries, :items, :to => :parsed_contents
-  
+
   def parsed_contents
-    @parsed_contents ||= SimpleRSS.parse(contents)
+    @parsed_contents ||= Feedzirra::Feed.parse(contents)
   end
   
   def contents
@@ -18,10 +18,10 @@ class Feed < ActiveRecord::Base
       begin
         self.expires_at = Time.now.utc + TTL
         new_contents = remote_contents
-        SimpleRSS.parse(new_contents) # Check that we can actually parse it
+        Feedzirra::Feed.parse(new_contents) # Check that we can actually parse it
         write_attribute(:contents, new_contents)
         save
-      rescue StandardError, Timeout::Error, SimpleRSSError => exception
+      rescue StandardError, Timeout::Error, Feedzirra::NoParserAvailable => exception
         logger.error("Loading feed #{url} failed with #{exception.inspect}")
         self.expires_at = Time.now.utc + TTL_ON_ERROR
         save
