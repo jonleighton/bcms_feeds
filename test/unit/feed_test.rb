@@ -13,13 +13,13 @@ class FeedTest < ActiveSupport::TestCase
     Feed.const_set(:TIMEOUT, 1)
   end
   
-  test "remote_contents should fetch the feed" do
-    @feed.expects(:open).with("http://example.com/blog.rss").returns(stub(:read => @contents))
+  test "remote_contents should fetch the feed via simple_get" do
+    @feed.expects(:simple_get).returns( @contents )
     assert_equal @contents, @feed.remote_contents
   end
   
   test "remote_contents should raise a Timeout::Error if fetching the feed takes longer then Feed::TIMEOUT" do
-    def @feed.open(url)
+    def @feed.simple_get(url)
       sleep(2)
       stubs(:read => "bla")
     end
@@ -81,5 +81,15 @@ class FeedTest < ActiveSupport::TestCase
     
     assert_equal 'http://www.foo.com', feed.url
     assert_equal '<feed>' + 'w' * 300000 + '</feed>', feed.contents
+  end
+
+  test "url_path should return the path from the requested url" do
+    parsed_url = URI.parse("http://example.com/blog.rss")
+    assert_equal("/blog.rss", @feed.send(:url_path, parsed_url))
+  end
+
+  test "url_path should include the provided query string" do
+    parsed_url = URI.parse("http://example.com/blog.rss?feed=atom")
+    assert_equal("/blog.rss?feed=atom", @feed.send(:url_path, parsed_url))
   end
 end
